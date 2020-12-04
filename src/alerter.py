@@ -146,4 +146,10 @@ class EmailAlerter(AlerterBase):
         msg["To"] = ", ".join(self.recipients)
         with smtplib.SMTP(self.relay) as s:
             logging.debug(f"sending email: subject: {set_subject}")
+            s.ehlo()
+            try:
+                s.starttls()
+                s.ehlo()
+            except smtplib.SMTPNotSupportedError:
+                pass
             s.send_message(msg)
